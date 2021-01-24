@@ -1,7 +1,5 @@
 # Bank
 
-![Backend master class](backend-master.png)
-
 In this backend master class, we’re going to learn everything about how to design, develop, and deploy a complete backend system from scratch using Golang, PostgreSQL, and Docker.
 
 
