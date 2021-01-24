@@ -3,6 +3,72 @@
 In this backend master class, we’re going to learn everything about how to design, develop, and deploy a complete backend system from scratch using Golang, PostgreSQL, and Docker.
 
 
+## SQL Postgre
+
+-- users
+SELECT usename FROM pg_user;
+
+CREATE USER root SUPERUSER;
+
+ALTER USER root WITH PASSWORD 'secret';
+
+CREATE DATABASE simple_bank
+
+-- 
+
+CREATE TABLE "accounts" (
+  "id" bigserial PRIMARY KEY,
+  "owner" varchar NOT NULL,
+  "balance" bigint NOT NULL,
+  "currency" varchar NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
+);
+
+CREATE TABLE "entries" (
+  "id" bigserial PRIMARY KEY,
+  "account_id" bigint NOT NULL,
+  "amount" bigint NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
+);
+
+CREATE TABLE "transfers" (
+  "id" bigserial PRIMARY KEY,
+  "from_account_id" bigint NOT NULL,
+  "to_account_id" bigint NOT NULL,
+  "amount" bigint NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
+);
+
+ALTER TABLE "entries" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
+
+ALTER TABLE "transfers" ADD FOREIGN KEY ("from_account_id") REFERENCES "accounts" ("id");
+
+ALTER TABLE "transfers" ADD FOREIGN KEY ("to_account_id") REFERENCES "accounts" ("id");
+
+CREATE INDEX ON "accounts" ("owner");
+
+CREATE INDEX ON "entries" ("account_id");
+
+CREATE INDEX ON "transfers" ("from_account_id");
+
+CREATE INDEX ON "transfers" ("to_account_id");
+
+CREATE INDEX ON "transfers" ("from_account_id", "to_account_id");
+
+COMMENT ON COLUMN "entries"."amount" IS 'can be negative or positive';
+
+COMMENT ON COLUMN "transfers"."amount" IS 'must be positive';
+
+--
+
+SELECT * FROM accounts;
+
+SELECT * FROM entries;
+
+SELECT * FROM transfers;
+
+
+
 ## Simple bank service
 
 The service that we’re going to build is a simple bank. It will provide APIs for the frontend to do following things:
